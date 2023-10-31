@@ -1,0 +1,40 @@
+/*
+Module: gem-meta-monitoring
+Description: Wrapper module to include meta-monitoring metrics for Grafana Enterprise MetricssReceiver
+*/
+argument "forward_to" {
+    // comment = "Must be a list(MetricsReceiver) where collected metrics should be forwarded to"
+    option = false
+}
+
+argument "git_repo" {
+    optional = true
+    default = coalesce(env("GIT_REPO"), "https://github.com/grafana/agent-modules.gitf")
+}
+
+argument "git_rev" {
+    optional = true
+    default = coalesce(env("GIT_REV"), env("GIT_REVISION"), env("GIT_BRANCH"), "main")
+}
+
+argument "git_pull_freq" {
+    optional = true
+    default = "0s"
+}
+
+module.git "gem_ksm" {
+    repository = argument.git_repo.value
+    revision = argument.git_rev.value
+    pull_frequency = argument.git_pull_freq.value
+    path = "modules/kubernetes/metrics/scrapes/kube-state-metrics.river"
+    keep_metrics = "(.*-mimir-)?alertmanager.*|(.*-mimir-)?compactor.*|(.*-mimir-)?distributor.*|(.*-mimir-)?(gateway|cortex-gw|cortex-gw).*|(.*-mimir-)?ingester.*|(.*-mimir-)?querier.*|(.*-mimir-)?query-frontend.*|(.*-mimir-)?query-scheduler.*|(.*-mimir-)?ruler.*|(.*-mimir-)?store-gateway.*"
+
+    arguments {
+        forward_to = argument.forward_to.value
+        tenant = argument.tenant.value
+        clustering = argument.clustering.value
+        git_repo = argument.git_repo.value
+        git_rev = argument.git_rev.value
+        git_pull_freq = argument.git_pull_freq.value
+    }
+}
