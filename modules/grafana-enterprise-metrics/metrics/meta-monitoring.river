@@ -56,6 +56,7 @@ module.git "gem_ksm" {
         clustering = argument.clustering.value
         git_repo = argument.git_repo.value
         git_rev = argument.git_rev.value
+        keep_metrics = argument.keep_metrics.value
         git_pull_freq = argument.git_pull_freq.value
     }
 }
