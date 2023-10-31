@@ -22,12 +22,33 @@ argument "git_pull_freq" {
     default = "0s"
 }
 
+argument "tenant" {
+  // comment = "The tenant to filter logs to.  This does not have to be the tenantId, this is the value to look for in the logs.agent.grafana.com/tenant annotation, and this can be a regex."
+  optional = true
+  default = ".*"
+}
+
+argument "job_label" {
+    optional = true
+    default = "integrations/grafana-mimir/kube-state-metrics"
+}
+
+argument "clustering" {
+    optional = true
+    default = false
+}
+
+argument "keep_metrics" {
+    optional = true
+    default = "(.*-mimir-)?alertmanager.*|(.*-mimir-)?compactor.*|(.*-mimir-)?distributor.*|(.*-mimir-)?(gateway|cortex-gw|cortex-gw).*|(.*-mimir-)?ingester.*|(.*-mimir-)?querier.*|(.*-mimir-)?query-frontend.*|(.*-mimir-)?query-scheduler.*|(.*-mimir-)?ruler.*|(.*-mimir-)?store-gateway.*"
+}
+
 module.git "gem_ksm" {
     repository = argument.git_repo.value
     revision = argument.git_rev.value
     pull_frequency = argument.git_pull_freq.value
+    keep_metrics = argument.keep_metrics.value
     path = "modules/kubernetes/metrics/scrapes/kube-state-metrics.river"
-    keep_metrics = "(.*-mimir-)?alertmanager.*|(.*-mimir-)?compactor.*|(.*-mimir-)?distributor.*|(.*-mimir-)?(gateway|cortex-gw|cortex-gw).*|(.*-mimir-)?ingester.*|(.*-mimir-)?querier.*|(.*-mimir-)?query-frontend.*|(.*-mimir-)?query-scheduler.*|(.*-mimir-)?ruler.*|(.*-mimir-)?store-gateway.*"
 
     arguments {
         forward_to = argument.forward_to.value
