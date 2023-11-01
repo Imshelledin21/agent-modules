@@ -51,7 +51,6 @@ module.git "gem_ksm" {
 
     arguments {
         forward_to = argument.forward_to.value
-        tenant = argument.tenant.value
         clustering = argument.clustering.value
         git_repo = argument.git_repo.value
         git_rev = argument.git_rev.value
