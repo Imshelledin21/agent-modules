@@ -47,7 +47,6 @@ module.git "gem_ksm" {
     repository = argument.git_repo.value
     revision = argument.git_rev.value
     pull_frequency = argument.git_pull_freq.value
-    keep_metrics = argument.keep_metrics.value
     path = "modules/kubernetes/metrics/scrapes/kube-state-metrics.river"
 
     arguments {
